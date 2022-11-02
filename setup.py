@@ -31,4 +31,7 @@ setuptools.setup(
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.7",
     install_requires=['pybedtools==0.9.0','pysam==0.19.1', 'six==1.16.0']
+    extras_require={
+        'dev': ['build==0.9.0', 'twine==4.0.1']
+    }
 )
