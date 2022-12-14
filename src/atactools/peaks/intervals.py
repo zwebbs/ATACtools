@@ -47,6 +47,11 @@ class Interval():
     chromEnd: int
     name: str
 
+    # add a default field not specified in the user-specified
+    # arguments for the normalized_score field
+    def __post_init__(self):
+        self.norm_score = -1
+
     # define a custom printout representation for the Interval
     def __repr__(self):
         spec = f" {self.chrom} {self.chromStart} {self.chromEnd} {self.name} "
@@ -89,6 +94,15 @@ class Interval():
     # based on interval algebra on matching chromosomes
     def __ge__(self,other):
         return (self.__gt__(other) or self.__eq__(other))
+    
+    # define a custom function to determine whether the interval intersects
+    # another interval. intervals on separate chromosomes do not intersect
+    def intersect(self,other):
+        if self.chrom != other.chrom: return True
+        else:
+            return not (  # define intersection conditions
+                (other.chromEnd < self.chromStart) or 
+                (other.chromStart > self.chromEnd)) 
 
 
 # class Bed6() - child class of Interval() which adds score and strand.
@@ -110,16 +124,19 @@ class Bed6(Interval):
         return repr(f"Bed6({spec_bed})")
     
 
-# class NarrowPeak() - child class of Bed6() which adds p-value, q-value, and summit offset.
+# class NarrowPeak() - child class of Bed6() which adds four attributes; 
+# signal Value p-value, q-value, and summit offset.
 # * complies with the narrowPeak standard found on the UCSC file format standards
 #   webpage: https://genome.ucsc.edu/FAQ/FAQformat.html#format1
 # 
-# * the class adds three attributes to the Bed6 base class:
-#    1. -log10 of p-value of the peak enrichment (log_pval) -required-
-#    2. -log10 of FDR adjusted q-value (log_qval) -required-
-#    3. basepair offset from chromStart for peak summit (summit) -required-
+# * the class adds four attributes to the Bed6 base class:
+#    1. signal value, or overall enrichment (sigval) -required-
+#    2. -log10 of p-value of the peak enrichment (log_pval) -required-
+#    3. -log10 of FDR adjusted q-value (log_qval) -required-
+#    4. basepair offset from chromStart for peak summit (summit) -required-
 @dataclass
 class NarrowPeak(Bed6):
+    sigval: float
     log_pval: float
     log_qval: float
     summit: int

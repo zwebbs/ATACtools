@@ -5,3 +5,5 @@
 
 # module imports
 from .intervals import Interval, Bed6, NarrowPeak
+from .normalize import normalize_peaks
+from .normalize import STRATEGIES

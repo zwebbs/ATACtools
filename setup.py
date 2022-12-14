@@ -11,7 +11,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="atactools",
-    version="0.0.1",
+    version="0.0.2",
     author="Zach Weber",
     author_email="zach.weber.813@gmail.com",
     description="Tools for ATACSeq QC and Post-Processing",
@@ -33,5 +33,8 @@ setuptools.setup(
     install_requires=['pysam==0.19.1', 'six==1.16.0'],
     extras_require={
         'dev': ['build==0.9.0', 'twine==4.0.1']
+    },
+    entry_points={'console_scripts': {
+        'selectFWPeaks=scripts.selectFWPeaks:main'}
     }
 )
